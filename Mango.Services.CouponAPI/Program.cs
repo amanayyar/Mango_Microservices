@@ -16,10 +16,16 @@ IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
 builder.Services.AddSingleton(mapper);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+//builder.Services.AddKeyedSingleton<IEmployeeRepository, PermanentEmployee>("permanentEmployee");
+//builder.Services.AddKeyedSingleton<IEmployeeRepository, ContractualEmployee>("contractualEmployee");
+//builder.Services.AddSingleton<IEmployeeRepository, PermanentEmployee>() ;
+//builder.Services.AddSingleton<IEmployeeRepository, ContractualEmployee>();
 
 var app = builder.Build();
 
