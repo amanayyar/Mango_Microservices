@@ -23,9 +23,39 @@ namespace Mango.Services.AuthAPI.Service
 			throw new NotImplementedException();
 		}
 
-		public Task<UserDto> Register(RegistrationRequestDto registrationRequestDto)
+		public async Task<UserDto> Register(RegistrationRequestDto registrationRequestDto)
 		{
-			throw new NotImplementedException();
+			ApplicationUser applicationUser = new()
+			{
+				UserName = registrationRequestDto.Email,
+				Email = registrationRequestDto.Email,
+				NormalizedEmail = registrationRequestDto.Email.ToUpper(),
+				Name = registrationRequestDto.Name,
+				PhoneNumber = registrationRequestDto.PhoneNumber
+			};
+
+			try
+			{
+				var result = await _userManager.CreateAsync(applicationUser, registrationRequestDto.Password);
+				if (result.Succeeded)
+				{
+					var userToReturn = _db.ApplicationUsers.First(u => u.UserName == registrationRequestDto.Email);
+					UserDto userDto = new()
+					{
+						ID = userToReturn.Id,
+						Email = userToReturn.Email,
+						Name = userToReturn.Name,
+						PhoneNumber = userToReturn.PhoneNumber
+					};
+					return userDto;
+				}
+			}
+			catch (Exception ex)
+			{
+
+
+			}
+			return new UserDto();
 		}
 	}
 }
