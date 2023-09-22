@@ -37,6 +37,24 @@
 							</ul>
 						</li>
 					</ul>
+					<ul class="navbar-nav">
+						@if (!User.Identity.IsAuthenticated)
+						{
+							<li class="nav-item">
+								<a class="nav-link " asp-controller="Auth" asp-action="Login">Login</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link " asp-controller="Auth" asp-action="Register">Register</a>
+							</li>
+						}
+						else
+						{
+							<li class="nav-item">
+								<a class="nav-link " asp-controller="Auth" asp-action="Logout">Logout</a>
+							</li>
+						}
+
+					</ul>
 				</div>
 			</div>
 		</nav>
@@ -56,7 +74,7 @@
 			<i class="bi bi-facebook"></i>
 		</div>
 	</footer>
-	<script src="~/lib/jquery/dist/jquery.min.js"></script>	
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
 	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="~/js/site.js" asp-append-version="true"></script>
 	@await RenderSectionAsync("Scripts", required: false)
