@@ -57,7 +57,7 @@ namespace Mango.Services.CouponAPI.Controllers
 		}
 
 		[HttpGet("GetByCode/{code}")]
-		public ResponseDto GetByCode(string code) 
+		public ResponseDto GetByCode(string code)
 		{
 			try
 			{
@@ -73,7 +73,8 @@ namespace Mango.Services.CouponAPI.Controllers
 		}
 
 		[HttpPost]
-		public ResponseDto Post([FromBody] CouponDto couponDto) 
+		[Authorize(Roles = "Admin")]
+		public ResponseDto Post([FromBody] CouponDto couponDto)
 		{
 			try
 			{
@@ -91,6 +92,7 @@ namespace Mango.Services.CouponAPI.Controllers
 		}
 
 		[HttpPut]
+		[Authorize(Roles = "Admin")]
 		public ResponseDto Put([FromBody] CouponDto couponDto)
 		{
 			try
@@ -109,11 +111,12 @@ namespace Mango.Services.CouponAPI.Controllers
 		}
 
 		[HttpDelete]
+		[Authorize(Roles = "Admin")]
 		[Route("{id:int}")]
 		public ResponseDto Delete(int id)
 		{
 			try
-			{				
+			{
 				Coupon obj = _db.Coupons.First(u => u.CouponId == id);
 				_db.Coupons.Remove(obj);
 				_db.SaveChanges();
@@ -126,6 +129,6 @@ namespace Mango.Services.CouponAPI.Controllers
 			}
 			return _response;
 		}
-		
+
 	}
 }
