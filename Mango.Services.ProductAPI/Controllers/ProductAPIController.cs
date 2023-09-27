@@ -24,6 +24,7 @@ namespace Mango.Services.ProductAPI.Controllers
             _response = new ResponseDto();
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public ResponseDto Get()
         {
