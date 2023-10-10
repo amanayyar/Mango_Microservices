@@ -19,12 +19,50 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
 		private IProductService _productService;
 		private ResponseDto _response;
 
-		public CartAPIController(AppDbContext db, IMapper mapper,IProductService productService)
+		public CartAPIController(AppDbContext db, IMapper mapper, IProductService productService)
 		{
 			_db = db;
 			_mapper = mapper;
 			_productService = productService;
 			this._response = new ResponseDto();
+		}
+
+		[HttpPost("ApplyCoupon")]
+		public async Task<object> ApplyCoupon([FromBody] CartDto cartDto)
+		{
+			try
+			{
+				var cartFromDb = await _db.CartHeaders.FirstAsync(u => u.UserId == cartDto.CartHeader.UserId);
+				cartFromDb.CouponCode = cartDto.CartHeader.CouponCode;
+				_db.CartHeaders.Update(cartFromDb);
+				await _db.SaveChangesAsync();
+				_response.Result = true;
+			}
+			catch (Exception ex)
+			{
+				_response.Message = ex.Message.ToString();
+				_response.IsSuccess = false;
+			}
+			return _response;
+		}
+
+		[HttpPost("RemoveCoupon")]
+		public async Task<object> RemoveCoupon([FromBody] CartDto cartDto)
+		{
+			try
+			{
+				var cartFromDb = await _db.CartHeaders.FirstAsync(u => u.UserId == cartDto.CartHeader.UserId);
+				cartFromDb.CouponCode = "";
+				_db.CartHeaders.Update(cartFromDb);
+				await _db.SaveChangesAsync();
+				_response.Result = true;
+			}
+			catch (Exception ex)
+			{
+				_response.Message = ex.Message.ToString();
+				_response.IsSuccess = false;
+			}
+			return _response;
 		}
 
 		[HttpGet("GetCart/{userId}")]
