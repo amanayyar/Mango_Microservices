@@ -45,7 +45,7 @@ namespace Mango.Services.OrderAPI.Controllers
 				{
 					objList = _db.OrderHeaders.Include(u => u.OrderDetails).Where(u => u.UserId == userId).OrderByDescending(u => u.OrderHeaderId).ToList();
 				}
-				_response.Result = _mapper.Map<OrderHeaderDto>(objList);
+				_response.Result = _mapper.Map<IEnumerable<OrderHeaderDto>>(objList);
 			}
 			catch (Exception ex)
 			{
