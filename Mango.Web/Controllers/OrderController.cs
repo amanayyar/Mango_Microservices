@@ -3,6 +3,7 @@ using Mango.Web.Service.IService;
 using Mango.Web.Utility;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace Mango.Web.Controllers
@@ -20,13 +21,31 @@ namespace Mango.Web.Controllers
 			return View();
 		}
 
+		public async Task<IActionResult> OrderDetail(int orderId)
+		{
+			OrderHeaderDto orderHeaderDto = new OrderHeaderDto();
+			string userId = User.Claims.Where(u => u.Type == JwtRegisteredClaimNames.Sub)?.FirstOrDefault()?.Value;
+
+			var response = await _orderService.GetOrder(orderId);
+			if (response != null && response.IsSuccess)
+			{
+				orderHeaderDto = JsonConvert.DeserializeObject<OrderHeaderDto>(Convert.ToString(response.Result));
+			}
+			if (!User.IsInRole("Admin") && userId != orderHeaderDto.UserId)
+			{
+				return NotFound();
+			}
+			return View(orderHeaderDto);
+		}
+
 		[HttpGet]
 		public IActionResult GetAll()
 		{
 			IEnumerable<OrderHeaderDto> list;
 			string userId = "";
 
-			if (!User.IsInRole(SD.RoleAdmin))
+			if (!User.IsInRole("Admin"))
+			//if (!User.IsInRole(SD.RoleAdmin))
 			{
 				userId = User.Claims.Where(u => u.Type == JwtRegisteredClaimNames.Sub)?.FirstOrDefault()?.Value;
 			}
